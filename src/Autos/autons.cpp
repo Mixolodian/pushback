@@ -319,6 +319,7 @@ void SKILLS() {
   chassis.turn_to_angle(270);
   drive_to_wall(430,7,1,1,2000,false);
   //SCORING
+  //test?
   longGoaling = true;
   chassis.turn_to_angle(0);
   drive_to_wall(925,7,1,1,2000,false);
