@@ -136,38 +136,7 @@ void turn_test() {
   IntakeMotors.setMaxTorque(100,pct);
   chassis.set_coordinates(0,0,0);
 
-  IntakeMotors.spin(forward, 100, pct);
-  chassis.drive_distance(3);
-  chassis.drive_distance(-16.5);
-  Matchloader.set(true);
-  chassis.turn_to_angle(270);
-  chassis.set_drive_constants(4, 3.5, 0, 17, 0);    // Forward/backward
-  chassis.drive_distance(4);
-  default_constants();
-  delayedCall(HoodToggle,1000);
-  chassis.drive_distance(-15);
-  Matchloader.set(false);
-  wait(1,sec);
-  chassis.drive_distance(4);
-  Hood.set(false);
-  chassis.turn_to_point(25,-19);
-  delayedCall(MatchToggle,1000);
-  chassis.drive_to_point(25,-17);
-  Matchloader.set(false);
-  chassis.turn_to_point(24,27);
-  chassis.drive_to_point(24,27);
-  chassis.turn_to_angle(315);
-  delayedCall(MidGoalToggle,150);
-  chassis.set_drive_constants(3, 3.5, 0, 17, 0);    // Forward/backward
-  chassis.drive_to_point(36,16);
-  wait(0.4,sec);
-  Wings.set(false);
-  default_constants();
-  chassis.turn_to_point(9,52);
-  chassis.drive_to_point(9,52);
-  chassis.turn_to_angle(270);
-  chassis.drive_distance(-3);
-  Hood.set(true);
+  
 
 }
 
