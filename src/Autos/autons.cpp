@@ -14,7 +14,7 @@
 #include "robot-config.h"
 #include "subsystems.h"
 #include "Autos/autonUtil.h"
-
+//mikecoxlong
 /*============================================================================*/
 /*                                                                            */
 /*                      SECTION 1: TOGGLE FUNCTIONS                           */
@@ -31,7 +31,7 @@ int GoalWrapper() {
       Wings.set(true);
       Hood.set(true);
     }
-    if(longGoaling && DistanceSide.objectDistance(mm) < 30){
+    if(longGoaling && DistanceSide.objectDistance(mm) < -1){
       Hood.set(true);
     }
     else{
@@ -316,19 +316,20 @@ void SKILLS() {
   chassis.drive_to_point(-53,10);
   chassis.turn_to_point(-53,90);
   chassis.drive_to_point(-53,90);
-  chassis.turn_to_angle(270);
-  drive_to_wall(430,7,1,1,2000,false);
+  chassis.drive_to_point(-40,86);
+  //drive_to_wall(430,7,1,1,2000,false);
   //SCORING
   //test?
   longGoaling = true;
   chassis.turn_to_angle(0);
-  drive_to_wall(925,7,1,1,2000,false);
+  chassis.drive_to_point(-40,76);
+  //drive_to_wall(925,7,1,1,2000,false);
+  Hood.set(true);
   IntakeMotors.spin(fwd,100,pct);
   Controller1.rumble("---");
   wait(2,sec);
   chassis.turn_to_angle(0);
   Hood.set(false);
-  chassis.set_coordinates(-40,76,0);
   Matchloader.set(true);
   chassis.set_drive_constants(3, 3.5, 0, 17, 0);    // Forward/backward
   chassis.drive_to_point(-40,105);
