@@ -37,14 +37,14 @@
  */
 void default_constants() {
   // Movement PID constants
-  chassis.set_drive_constants(8, 3.5, 0, 19, 0);    // Forward/backward
-  chassis.set_heading_constants(7, .4, 0, 1, 0);     // Heading correction
-  chassis.set_turn_constants(7, .5, 0, 4, 15);       // Point turns
+  chassis.set_drive_constants(8, 3.2, 0, 20, 0);    // Forward/backward
+  chassis.set_heading_constants(8, .4, 0, 1, 0);     // Heading correction
+  chassis.set_turn_constants(8, .5, 0, 4, 15);       // Point turns
   chassis.set_swing_constants(6, .3, 0, 2, 15);      // Swing turns
 
   // Exit conditions
   chassis.set_drive_exit_conditions(1.5, 250, 3400);
-  chassis.set_turn_exit_conditions(3, 200, 2000);
+  chassis.set_turn_exit_conditions(2, 200, 2000);
   chassis.set_swing_exit_conditions(3, 100, 3000);
 }
 

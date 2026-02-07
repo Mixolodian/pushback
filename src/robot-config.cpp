@@ -74,8 +74,8 @@ digital_out Descore = digital_out(Brain.ThreeWirePort.D);
 /*----------------------------------------------------------------------------*/
 
 // Distance sensors
-distance DistanceBack = distance(PORT19);
-distance DistanceFront = distance(PORT18);
+distance DistanceBack = distance(PORT18);
+distance DistanceFront = distance(PORT19);
 distance DistanceSide = distance(PORT17);
 
 // Inertial sensor for heading (shared with chassis on PORT7)

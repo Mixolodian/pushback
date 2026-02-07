@@ -293,8 +293,8 @@ void usercontrol(void) {
     }
     else if (Controller1.ButtonL1.pressing()) {
       // MID GOAL
-      intakePct = 58;
-      hoodPct = 58;
+      intakePct = 47;
+      hoodPct = 47;
       Hood.set(false);
 
       if (Controller1.ButtonA.pressing()) {

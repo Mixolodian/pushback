@@ -135,9 +135,46 @@ void turn_test() {
   default_constants();
   IntakeMotors.setMaxTorque(100,pct);
   chassis.set_coordinates(0,0,0);
-
   
+  chassis.drive_to_point(0,-37);
+  Matchloader.set(true);
+  IntakeMotors.spin(fwd,100,pct);
+  chassis.set_drive_constants(6, 3.5, 0, 19, 0);    // Forward/backward
+  chassis.turn_to_point(-10,-39);
+  chassis.drive_to_point(-10,-39);
+  wait(0.3,sec);
+  default_constants();
 
+  chassis.drive_to_point(20,-40);
+  Hood.set(true);
+  Matchloader.set(false);
+  wait(1,sec);
+
+  //chassis.turn_to_angle(20,8,2,200,300);
+  chassis.drive_to_point(17,-40);
+  chassis.turn_to_point(24,-18);
+  Hood.set(false);
+  delayedCall(MatchToggle,500);
+  chassis.drive_to_point(25,-18);
+  chassis.turn_to_point(25,28);
+  Matchloader.set(false);
+  
+  delayedCall(MatchToggle,700);
+  chassis.set_drive_exit_conditions(0.5, 300, 3400);
+  chassis.drive_to_point(26,29);
+  default_constants();
+  chassis.turn_to_angle(315);
+  Matchloader.set(false);
+  delayedCall(MidGoalToggle,260);
+
+  chassis.drive_to_point(37,14.7);
+  wait(0.3,sec);
+  Wings.set(false);
+  chassis.drive_to_point(6,53);
+
+  chassis.turn_to_angle(270);
+  delayedCall(HoodToggle,500);
+  chassis.drive_distance(-10);
 }
 
 /**
@@ -168,58 +205,81 @@ void odom_test() {
 
 /**
  * @brief Low side autonomous routine
+ *
+ * This autonomous starts on the low side of the field (positive Y direction)
+ * and executes a sequence to collect and score triballs.
  */
 void low_side_auto() {
-  default_constants();
-  IntakeMotors.setMaxTorque(100,pct);
+  /*--------------------------------------------------------------------------*/
+  /*                         PHASE 1: INITIALIZATION                          */
+  /*--------------------------------------------------------------------------*/
+  default_constants();                    // Reset PID constants to default values
+  IntakeMotors.setMaxTorque(100,pct);     // Set intake to full torque
 
-  chassis.set_coordinates(0, 0, 270);
+  chassis.set_coordinates(0, 0, 270);     // Set starting position: origin, facing left (270°)
 
-  IntakeMotors.spin(forward, 100, pct);
-  chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);    // Forward/backward
-  delayedCall(MatchToggle,650);
-  chassis.drive_to_point(-35,5);
+  /*--------------------------------------------------------------------------*/
+  /*                    PHASE 2: FIRST BALL COLLECTION                     */
+  /*--------------------------------------------------------------------------*/
+  IntakeMotors.spin(forward, 100, pct);   // Start intake spinning to collect triballs
+  chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);  // Set faster drive constants for approach
+  delayedCall(MatchToggle,650);           // Schedule matchloader toggle after 650ms
+  chassis.drive_to_point(-35,5);          // Drive to first triball location
 
-  default_constants();
-  Matchloader.set(false);
+  /*--------------------------------------------------------------------------*/
+  /*                      PHASE 3: FIRST SCORING ATTEMPT                      */
+  /*--------------------------------------------------------------------------*/
+  default_constants();                    // Reset to default PID constants
+  Matchloader.set(false);                 // Retract matchloader
 
-  chassis.turn_to_angle(215);
-    chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);    // Forward/backward
+  chassis.turn_to_angle(215);             // Turn to face scoring direction (southwest)
+  chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);  // Set drive constants for precision
 
-    chassis.drive_distance(4);
-  default_constants();
-  IntakeMotors.spin(fwd,-70,pct);
-  wait(1,sec);
-  IntakeMotors.spin(fwd,100,pct);
-  chassis.drive_distance(-6);
-  chassis.turn_to_point(-15,28);
-  chassis.drive_to_point(-15,28);
-  Matchloader.set(true);
-  chassis.turn_to_angle(90);
-  chassis.set_drive_constants(5.8, 3.5, 0, 17, 0);    // Forward/backward
+  chassis.drive_distance(4);              // Short forward drive to position for outtake
+  default_constants();                    // Reset constants
+  IntakeMotors.spin(fwd,-70,pct);         // Reverse intake to outtake/eject triball
+  wait(1,sec);                            // Wait for outtake to complete
+  IntakeMotors.spin(fwd,100,pct);         // Resume forward intake
+  chassis.drive_distance(-6);             // Back up after scoring
 
-  chassis.drive_distance(18);
-      chassis.set_drive_constants(9, 3.5, 0, 17, 0);    //
-  Hood.set(false);
-  chassis.drive_to_point(-30,31.5);
-  Hood.set(true);
-  wait(1.4,sec);
-  Matchloader.set(false);
-  IntakeMotors.spin(fwd,0,pct);
+  /*--------------------------------------------------------------------------*/
+  /*                    PHASE 4: SECOND TRIBALL COLLECTION                    */
+  /*--------------------------------------------------------------------------*/
+  chassis.turn_to_point(-15,28);          // Turn to face next triball location
+  chassis.drive_to_point(-15,28);         // Drive to collect second triball
+  Matchloader.set(true);                  // Deploy matchloader for scoring position
+  chassis.turn_to_angle(90);              // Turn to face forward (toward goal)
+  chassis.set_drive_constants(5.8, 3.5, 0, 17, 0);  // Slightly faster drive constants
 
-  //chassis.turn_to_angle(90);
-  /*chassis.drive_distance(25);
-  Hood.set(false);
-  wait(0.2,sec);
-  chassis.drive_to_point(-30,-31.5);
-  Hood.set(true);*/
+  /*--------------------------------------------------------------------------*/
+  /*                       PHASE 5: GOAL APPROACH & SCORE                     */
+  /*--------------------------------------------------------------------------*/
+  chassis.drive_distance(18);             // Drive forward toward the goal
+  chassis.set_drive_constants(9, 3.5, 0, 17, 0);    // High speed for final approach
+  Hood.set(false);                        // Lower hood to prepare for scoring
+  chassis.drive_to_point(-30,31.5);       // Drive to optimal scoring position at goal
+  Hood.set(true);                         // Raise hood to release triballs into goal
+  wait(1.4,sec);                          // Wait for triballs to settle/score
+  Matchloader.set(false);                 // Retract matchloader
+  IntakeMotors.spin(fwd,0,pct);           // Stop intake motors
 
-  chassis.drive_distance(5);
-  chassis.turn_to_angle(45);
-  chassis.drive_distance(-5);
-  chassis.turn_to_angle(90);
-  chassis.drive_distance(-6.5);
-  chassis.turn_to_angle(90);
+  /*--------------------------------------------------------------------------*/
+  /*                      PHASE 6: REPOSITIONING/CLEANUP                      */
+  /*--------------------------------------------------------------------------*/
+  // Commented out alternative approach:
+  // chassis.turn_to_angle(90);
+  // chassis.drive_distance(25);
+  // Hood.set(false);
+  // wait(0.2,sec);
+  // chassis.drive_to_point(-30,-31.5);
+  // Hood.set(true);
+
+  chassis.drive_distance(5);              // Short drive forward to clear goal
+  chassis.turn_to_angle(45);              // Turn to 45° (northeast direction)
+  chassis.drive_distance(-5);             // Back up
+  chassis.turn_to_angle(90);              // Turn to face forward (90°)
+  chassis.drive_distance(-6.5);           // Final backup to safe position
+  chassis.turn_to_angle(90);              // Ensure facing 90° at end of autonomous
 
 }
 
@@ -271,8 +331,8 @@ void SKILLS() {
   Matchloader.set(true);
   Wings.set(false);
   chassis.set_drive_constants(3, 3.5, 0, 17, 0);    // Forward/backward
-  chassis.turn_to_point(-42,-15);
-  chassis.drive_to_point(-42,-15);
+  chassis.turn_to_point(-42,-14);
+  chassis.drive_to_point(-42,-14);
   wait(1,sec);
   default_constants();
 
@@ -285,14 +345,15 @@ void SKILLS() {
   chassis.drive_to_point(-53,10);
   chassis.turn_to_point(-53,90);
   chassis.drive_to_point(-53,90);
-  chassis.drive_to_point(-40,86);
-  //drive_to_wall(430,7,1,1,2000,false);
+  chassis.turn_to_angle(270);
+  drive_to_wall(430,7,1,1,2000,false);
   //SCORING
   //test?
   longGoaling = true;
   chassis.turn_to_angle(0);
-  chassis.drive_to_point(-40,76);
-  //drive_to_wall(925,7,1,1,2000,false);
+  //chassis.drive_to_point(-40,76);
+  drive_to_wall(925,7,1,1,2000,false);
+  chassis.set_coordinates(-40,76,0);
   Hood.set(true);
   IntakeMotors.spin(fwd,100,pct);
   Controller1.rumble("---");
@@ -315,8 +376,8 @@ void SKILLS() {
 
   //THIRD MATACHLOADER
   chassis.drive_distance(2);
-  chassis.turn_to_point(51,84);
-  chassis.drive_to_point(51,84);
+  chassis.turn_to_point(50,84);
+  chassis.drive_to_point(50,84);
   Matchloader.set(true);
   IntakeMotors.spin(fwd,100,pct);
   chassis.set_drive_constants(4, 3.5, 0, 17, 0);    // Forward/backward
@@ -383,7 +444,11 @@ void full_test() {
   /*                    SUBSYSTEM INITIALIZATION                              */
   /*--------------------------------------------------------------------------*/
   task GoalTask(GoalWrapper);
+  chassis.set_coordinates(0,0,0);
   longGoaling = true;
+  drive_to_wall(430,8,1,4,1000,false);
+  chassis.turn_to_angle(270);
+  drive_to_wall(925,8,1,4,1000,false);
 
 
 
