@@ -113,12 +113,6 @@ Drive chassis(
 int current_auton_selection = 2;  // Default auton (0-indexed)
 bool auto_started = false;        // Flag to exit pre-auton loop
 
-
-
-
-
-
-
 /*============================================================================*/
 /*                                                                            */
 /*                     SECTION 3: PRE-AUTONOMOUS ROUTINE                      */
@@ -128,13 +122,25 @@ bool auto_started = false;        // Flag to exit pre-auton loop
 /*                                                                            */
 /*============================================================================*/
 
-// Task to print robot coordinates to terminal
-int printOdomTask() {
+// Task to print robot debug info to terminal (2 lines, overwrites in place)
+int printDebugTask() {
   while (true) {
-    printf("\rX: %.2f  Y: %.2f  Heading: %.2f      ",
+    printf("\rX:%.2f Y:%.2f H:%.2f | DF:%.0f DB:%.0f DS:%.0f      "
+           "\n\rDL:%.0f/%.0f/%.0f DR:%.0f/%.0f/%.0f I:%.0f B:%.0f C      \033[A",
            chassis.get_X_position(),
            chassis.get_Y_position(),
-           chassis.get_absolute_heading());
+           chassis.get_absolute_heading(),
+           DistanceFront.objectDistance(mm),
+           DistanceBack.objectDistance(mm),
+           DistanceSide.objectDistance(mm),
+           LeftMotor1.temperature(celsius),
+           LeftMotor2.temperature(celsius),
+           LeftMotor3.temperature(celsius),
+           RightMotor1.temperature(celsius),
+           RightMotor2.temperature(celsius),
+           RightMotor3.temperature(celsius),
+           Intake.temperature(celsius),
+           BackRoller.temperature(celsius));
     fflush(stdout);
     task::sleep(100);
   }
@@ -142,17 +148,14 @@ int printOdomTask() {
 }
 
 void pre_auton() {
-  // Initialize robot hardware
   vexcodeInit();
   default_constants();
 
-  // Start task to print coordinates to terminal
-  task odomPrintTask(printOdomTask);
+  // Start debug print task (only instance of terminal output)
+  task debugTask(printDebugTask);
 
   // Auton selection loop - runs until match starts
   while (!auto_started) {
-
-    // Display auton name based on current selection
     Brain.Screen.clearScreen();
     Brain.Screen.setCursor(1, 1);
     switch (current_auton_selection) {
@@ -173,12 +176,11 @@ void pre_auton() {
         break;
     }
 
-    // Handle screen tap to cycle autons
     if (Brain.Screen.pressing()) {
-      while (Brain.Screen.pressing()) {}  // Wait for release
+      while (Brain.Screen.pressing()) {}
       current_auton_selection++;
       if (current_auton_selection > 4) {
-        current_auton_selection = 0;  // Wrap around
+        current_auton_selection = 0;
       }
     }
 
@@ -196,28 +198,24 @@ void pre_auton() {
 /*============================================================================*/
 
 void autonomous(void) {
-  current_auton_selection =1;  // Override for testing (remove in competition)
+  current_auton_selection = 1;  // Override for testing (remove in competition)
   auto_started = true;
   GamePhase = AUTO;
 
   switch (current_auton_selection) {
-    case 0:  // Skills
+    case 0:
       SKILLS();
       break;
-
-    case 1:  // High Side Auto
+    case 1:
       high_side_auto();
       break;
-
-    case 2:  // Low Side Auto
+    case 2:
       low_side_auto();
       break;
-
-    case 3:  // Solo AWP
+    case 3:
       turn_test();
       break;
-
-    case 4:  // Test/Tuning
+    case 4:
       full_test();
       break;
   }
@@ -235,7 +233,8 @@ void autonomous(void) {
 /*    CONTROL SCHEME:                                                         */
 /*    R1 - Outtake (reverse intake + rollers)                                 */
 /*    R2 - Intake (forward intake + retract pneumatics)                       */
-/*    L1 - Mid goal (60% speed + deploy hood/wings)                           */
+/*    L1 - Mid goal (deploy wings)                                            */
+/*    B  - Intake + wings                                                     */
 /*    L2 - Scoring (100% speed + deploy hood only)                            */
 /*                                                                            */
 /*============================================================================*/
@@ -244,26 +243,10 @@ void usercontrol(void) {
   chassis.set_coordinates(0, 0, 0);
   GamePhase = OPCONTROL;
   subsystems::init();
-  vexcodeInit();
 
-  // Initialize PID display on controller
   if (enablePidTuning) {
     updateControllerDisplay();
   }
-
-  // Piston state - stays retracted once triggered
-  bool pistonRetracted = false;
-
-  /*--------------------------------------------------------------------------*/
-  /*                    DISTANCE TRACKING (OPTIONAL)                          */
-  /*    Uncomment to enable 3-sensor position tracking                        */
-  /*--------------------------------------------------------------------------*/
-  /*
-  distanceTracker = new DistanceTracking(3000.0, 3000.0, 3000.0);
-  distanceTracker->setSensorOffsets(0.0, 6.0, -6.0, 0.0, 6.0, 0.0);
-  distanceTracker->setFieldDimensions(144.0, 144.0);
-  vex::task trackingTask(distanceTrackingTask);
-  */
 
   /*--------------------------------------------------------------------------*/
   /*                         MAIN CONTROL LOOP                                */
@@ -282,42 +265,30 @@ void usercontrol(void) {
     /*------------------------------------------------------------------------*/
     /*                       INTAKE/ROLLER CONTROL                            */
     /*------------------------------------------------------------------------*/
-
     if (Controller1.ButtonR1.pressing()) {
-      // OUTTAKE - Reverse both systems
       intakePct = -100;
       hoodPct = -100;
-    }
-    else if (Controller1.ButtonR2.pressing()) {
-      // INTAKE - Forward + retract pneumatics
+    } else if (Controller1.ButtonR2.pressing()) {
       intakePct = 100;
       hoodPct = 100;
       Hood.set(false);
       Wings.set(false);
-    }
-    else if (Controller1.ButtonL1.pressing()) {
-      // MID GOAL
+    } else if (Controller1.ButtonL1.pressing()) {
       intakePct = 100;
       hoodPct = 100;
       Hood.set(false);
       Wings.set(true);
-      }
-       else if(Controller1.ButtonB.pressing()) {
+    } else if (Controller1.ButtonB.pressing()) {
       intakePct = 100;
       hoodPct = 100;
       Wings.set(true);
-    }
-    
-  
-    else if (Controller1.ButtonL2.pressing()) {
-      // SCORING - Full speed + hood only
+    } else if (Controller1.ButtonL2.pressing()) {
       intakePct = 100;
       hoodPct = 100;
       Hood.set(true);
       Wings.set(false);
     }
 
-    // Apply motor speeds
     Intake.spin(fwd, intakePct, pct);
     BackRoller.spin(fwd, hoodPct, pct);
 
@@ -325,16 +296,7 @@ void usercontrol(void) {
     /*                        DRIVETRAIN CONTROL                              */
     /*------------------------------------------------------------------------*/
     chassis.control_arcade();
-    
-    /*------------------------------------------------------------------------*/
-    /*                          DEBUG OUTPUT                                  */
-    /*------------------------------------------------------------------------*/
-    // Handle debug menu page switching and draw
-    
 
-    // Print to terminal
-    
-    // Prevent CPU hogging
     wait(20, msec);
   }
 }
@@ -346,14 +308,10 @@ void usercontrol(void) {
 /*============================================================================*/
 
 int main() {
-  // Register competition callbacks
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
-
-  // Run pre-autonomous (auton selector)
   pre_auton();
 
-  // Keep program alive
   while (true) {
     wait(100, msec);
   }

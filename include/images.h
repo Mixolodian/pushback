@@ -7,3 +7,4 @@ void drawLogoRight();
 void drawLogoLeft();
 void drawLogoMain();
 void drawLogoTest();
+void drawTeamNumber();
