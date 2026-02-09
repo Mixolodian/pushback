@@ -3,6 +3,9 @@
 
 extern Drive chassis;
 
+// Master toggle for PID tuning controls on the controller
+extern bool enablePidTuning;
+
 // Tuning mode: 0 = PID constants, 1 = Exit conditions
 extern int tuningMode;
 

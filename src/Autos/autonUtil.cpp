@@ -43,7 +43,7 @@ void default_constants() {
   chassis.set_swing_constants(6, .3, 0, 2, 15);      // Swing turns
 
   // Exit conditions
-  chassis.set_drive_exit_conditions(1.5, 250, 3400);
+  chassis.set_drive_exit_conditions(1.5, 250, 3900);
   chassis.set_turn_exit_conditions(2, 200, 2000);
   chassis.set_swing_exit_conditions(3, 100, 3000);
 }

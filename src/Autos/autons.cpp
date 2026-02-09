@@ -75,33 +75,33 @@ void high_side_auto() {
   default_constants();
   IntakeMotors.setMaxTorque(100,pct);
 
-  chassis.set_coordinates(0, 0, 270);  ;
+  chassis.set_coordinates(0, 0, 270);  
 
   IntakeMotors.spin(forward, 100, pct);
   chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);    // Forward/backward
   delayedCall(MatchToggle,650);
-  chassis.drive_to_point(-32,-5);
+  chassis.drive_to_point(-31,-5);
 
   default_constants();
 
   chassis.turn_to_angle(135);
-  Matchloader.set(false);
-    chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);    // Forward/backward
+    chassis.set_drive_constants(6, 3.5, 0, 17, 0);    // Forward/backward
 
 delayedCall(MidGoalToggle,280);
-    chassis.drive_distance(-5);
+    chassis.drive_distance(-5.3);
   default_constants();
-  IntakeMotors.spin(fwd,50,pct);
-  wait(0.67,sec);
-  Wings.set(false);
+  IntakeMotors.spin(fwd,100,pct);
+  wait(0.8,sec);
   IntakeMotors.spin(fwd,100,pct);
   chassis.turn_to_point(-15,-30);
   chassis.drive_to_point(-15,-30);
   Matchloader.set(true);
+  Wings.set(false);
   chassis.turn_to_angle(90);
       chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);    // Forward/backward
+        chassis.set_drive_exit_conditions(1.5, 250, 1200);
 
-  chassis.drive_distance(10);
+  chassis.drive_distance(14);
       chassis.set_drive_constants(9, 3.5, 0, 17, 0);    // Forward/backward
 
   Hood.set(false);
@@ -136,45 +136,50 @@ void turn_test() {
   IntakeMotors.setMaxTorque(100,pct);
   chassis.set_coordinates(0,0,0);
   
+  chassis.drive_distance(3);
+  Matchloader.set(true);
   chassis.drive_to_point(0,-37);
   Matchloader.set(true);
   IntakeMotors.spin(fwd,100,pct);
-  chassis.set_drive_constants(6, 3.5, 0, 19, 0);    // Forward/backward
-  chassis.turn_to_point(-10,-39);
-  chassis.drive_to_point(-10,-39);
-  wait(0.3,sec);
+  chassis.set_drive_constants(7, 3.5, 0, 19, 0);    // Forward/backward
+  chassis.set_drive_exit_conditions(1.5, 100, 400);
+  chassis.turn_to_angle(270);
+  drive_to_wall(220,7,1,4,900,false);
+  chassis.drive_distance(3);
   default_constants();
 
   chassis.drive_to_point(20,-40);
   Hood.set(true);
   Matchloader.set(false);
-  wait(1,sec);
+  wait(1.2,sec);
 
   //chassis.turn_to_angle(20,8,2,200,300);
-  chassis.drive_to_point(17,-40);
-  chassis.turn_to_point(24,-18);
+  chassis.drive_distance(5);
+ chassis.turn_to_point(24,-18);
   Hood.set(false);
   delayedCall(MatchToggle,500);
   chassis.drive_to_point(25,-18);
   chassis.turn_to_point(25,28);
   Matchloader.set(false);
   
-  delayedCall(MatchToggle,700);
+  delayedCall(MatchToggle,800);
   chassis.set_drive_exit_conditions(0.5, 300, 3400);
-  chassis.drive_to_point(26,29);
+  chassis.drive_to_point(26,28.5);
   default_constants();
-  chassis.turn_to_angle(315);
+  chassis.turn_to_angle(310);
   Matchloader.set(false);
   delayedCall(MidGoalToggle,260);
+  chassis.drive_distance(-6);
 
-  chassis.drive_to_point(37,14.7);
   wait(0.3,sec);
+  IntakeMotors.spin(fwd,-50,pct);
   Wings.set(false);
+  IntakeMotors.spin(fwd,100,pct);
   chassis.drive_to_point(6,53);
-
   chassis.turn_to_angle(270);
-  delayedCall(HoodToggle,500);
-  chassis.drive_distance(-10);
+
+  drive_to_wall(925,12,1,4,400,false);
+  Hood.set(true);
 }
 
 /**
@@ -315,7 +320,7 @@ void SKILLS() {
   IntakeMotors.spin(forward, 100, pct);
   chassis.drive_to_point(-20,20);
   Matchloader.set(true);
-  chassis.drive_to_point(-8,31);
+  chassis.drive_to_point(-8,32);
   IntakeMotors.spin(fwd,0,pct);
   chassis.turn_to_angle(225);
   delayedCall(MidGoalToggle,150);
@@ -366,7 +371,7 @@ void SKILLS() {
   wait(1.4,sec);
   default_constants();
   //SCORING
-  chassis.drive_to_point(-41,73);
+  chassis.drive_to_point(-40,76);
   Hood.set(true);
   wait(2,sec);
   Controller1.rumble("---");
@@ -376,24 +381,24 @@ void SKILLS() {
 
   //THIRD MATACHLOADER
   chassis.drive_distance(2);
-  chassis.turn_to_point(50,84);
-  chassis.drive_to_point(50,84);
+  chassis.turn_to_point(54,84);
+  chassis.drive_to_point(54,84);
   Matchloader.set(true);
   IntakeMotors.spin(fwd,100,pct);
   chassis.set_drive_constants(4, 3.5, 0, 17, 0);    // Forward/backward
   IntakeMotors.spin(forward, 100, pct);
-  chassis.turn_to_point(52,106);
-  chassis.drive_to_point(52,106);
+  chassis.turn_to_point(53,106);
+  chassis.drive_to_point(53,106);
   wait(1.4,sec);
   default_constants();
   Matchloader.set(false);
   IntakeMotors.spin(fwd,0,pct);
   //SCORE
   chassis.drive_distance(-5);
-  chassis.turn_to_point(65,85);
-  chassis.drive_to_point(65,85);
-  chassis.turn_to_point(65,0);
-  chassis.drive_to_point(65,0);
+  chassis.turn_to_point(67,85);
+  chassis.drive_to_point(67,85);
+  chassis.turn_to_point(67,0);
+  chassis.drive_to_point(67,0);
   chassis.turn_to_angle(90);
   //
   //
@@ -446,8 +451,8 @@ void full_test() {
   task GoalTask(GoalWrapper);
   chassis.set_coordinates(0,0,0);
   longGoaling = true;
-  drive_to_wall(430,8,1,4,1000,false);
-  chassis.turn_to_angle(270);
+  drive_to_wall(445,8,1,4,1000,false);
+  chassis.turn_to_angle(90);
   drive_to_wall(925,8,1,4,1000,false);
 
 

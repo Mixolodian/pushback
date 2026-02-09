@@ -40,14 +40,14 @@ controller Controller1 = controller(primary);
 /*----------------------------------------------------------------------------*/
 
 // Left side motors - ALL REVERSED for correct drive direction
-motor LeftMotor1 = motor(PORT10, ratio18_1, true);
-motor LeftMotor2 = motor(PORT6, ratio18_1, true);
-motor LeftMotor3 = motor(PORT9, ratio18_1, true);
+motor LeftMotor1 = motor(PORT10, ratio18_1, true); //10
+motor LeftMotor2 = motor(PORT6, ratio18_1, true); //6
+motor LeftMotor3 = motor(PORT9, ratio18_1, true); //9
 
 // Right side motors - NOT REVERSED
-motor RightMotor1 = motor(PORT1, ratio18_1, false);
-motor RightMotor2 = motor(PORT2, ratio18_1, false);
-motor RightMotor3 = motor(PORT3, ratio18_1, false);
+motor RightMotor1 = motor(PORT1, ratio18_1, false); //1
+motor RightMotor2 = motor(PORT2, ratio18_1, false);//2
+motor RightMotor3 = motor(PORT3, ratio18_1, false);//3
 
 /*----------------------------------------------------------------------------*/
 /*                           SUBSYSTEM MOTORS                                 */
@@ -75,11 +75,11 @@ digital_out Descore = digital_out(Brain.ThreeWirePort.D);
 
 // Distance sensors
 distance DistanceBack = distance(PORT18);
-distance DistanceFront = distance(PORT19);
+distance DistanceFront = distance(PORT19); //19
 distance DistanceSide = distance(PORT17);
 
 // Inertial sensor for heading (shared with chassis on PORT7)
-inertial Inertial = inertial(PORT7);
+inertial Inertial = inertial(PORT7);//7
 
 /*----------------------------------------------------------------------------*/
 /*                           INITIALIZATION                                   */

@@ -196,7 +196,7 @@ void pre_auton() {
 /*============================================================================*/
 
 void autonomous(void) {
-  current_auton_selection =0;  // Override for testing (remove in competition)
+  current_auton_selection =1;  // Override for testing (remove in competition)
   auto_started = true;
   GamePhase = AUTO;
 
@@ -247,7 +247,9 @@ void usercontrol(void) {
   vexcodeInit();
 
   // Initialize PID display on controller
-  updateControllerDisplay();
+  if (enablePidTuning) {
+    updateControllerDisplay();
+  }
 
   // Piston state - stays retracted once triggered
   bool pistonRetracted = false;
@@ -273,7 +275,9 @@ void usercontrol(void) {
     /*------------------------------------------------------------------------*/
     /*                       PID TUNING CONTROLS                              */
     /*------------------------------------------------------------------------*/
-    handlePidTuningControls();
+    if (enablePidTuning) {
+      handlePidTuningControls();
+    }
 
     /*------------------------------------------------------------------------*/
     /*                       INTAKE/ROLLER CONTROL                            */
@@ -293,23 +297,18 @@ void usercontrol(void) {
     }
     else if (Controller1.ButtonL1.pressing()) {
       // MID GOAL
-      intakePct = 47;
-      hoodPct = 47;
+      intakePct = 100;
+      hoodPct = 100;
       Hood.set(false);
-
-      if (Controller1.ButtonA.pressing()) {
-        // A override - 30% speed + wings
-        intakePct = 100;
-        hoodPct = 100;
-        Wings.set(true);
-      } else if (DistanceBack.objectDistance(mm) <= 250) {
-        // Auto wings when object detected close
-        Wings.set(true);
+      Wings.set(true);
       }
-    }
-    else if(Controller1.ButtonB.pressing()) {
+       else if(Controller1.ButtonB.pressing()) {
+      intakePct = 100;
+      hoodPct = 100;
       Wings.set(true);
     }
+    
+  
     else if (Controller1.ButtonL2.pressing()) {
       // SCORING - Full speed + hood only
       intakePct = 100;
