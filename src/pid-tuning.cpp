@@ -2,7 +2,7 @@
 #include "pid-tuning.h"
 
 // Master toggle for PID tuning controls on the controller
-bool enablePidTuning = true;
+bool enablePidTuning = false;
 
 // Tuning mode: 0 = PID constants, 1 = Exit conditions
 int tuningMode = 0;

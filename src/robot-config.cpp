@@ -1,23 +1,8 @@
-/*----------------------------------------------------------------------------*/
-/*                                                                            */
-/*    Module:       robot-config.cpp                                          */
-/*    Description:  Hardware definitions for all robot devices                */
-/*                                                                            */
-/*    PORT MAP:                                                               */
-/*    ---------                                                               */
-/*    PORT1  - RightMotor1          PORT11 - Intake                           */
-/*    PORT2  - RightMotor2          PORT16 - TopRoller                        */
-/*    PORT3  - RightMotor3          PORT17 - DistanceSide                     */
-/*    PORT6  - LeftMotor2           PORT18 - DistanceFront                    */
-/*    PORT7  - Inertial             PORT19 - DistanceBack                     */
-/*    PORT9  - LeftMotor3           PORT20 - BackRoller                       */
-/*    PORT10 - LeftMotor1                                                     */
-/*                                                                            */
-/*    3-WIRE PORTS:                                                           */
-/*    A - Hood          B - Matchloader                                       */
-/*    C - Wings         D - Descore                                           */
-/*                                                                            */
-/*----------------------------------------------------------------------------*/
+// robot-config.cpp - Hardware definitions
+// PORT MAP: 1-RightMotor1, 2-RightMotor2, 3-RightMotor3, 6-LeftMotor2,
+//           7-Inertial, 9-LeftMotor3, 10-LeftMotor1, 11-Intake,
+//           16-TopRoller, 17-DistanceSide, 18-DistanceFront, 19-DistanceBack,
+//           20-BackRoller | 3-Wire: A-Hood, B-Matchloader, C-Wings, D-Descore
 
 #include "vex.h"
 
@@ -25,66 +10,39 @@ using namespace vex;
 using signature = vision::signature;
 using code = vision::code;
 
-/*----------------------------------------------------------------------------*/
-/*                            CORE COMPONENTS                                 */
-/*----------------------------------------------------------------------------*/
-
+// Core Components
 brain Brain;
 controller Controller1 = controller(primary);
 
-/*----------------------------------------------------------------------------*/
-/*                            DRIVETRAIN MOTORS                               */
-/*    Motor constructor: motor(port, gearRatio, reversed)                     */
-/*    - ratio18_1 = 200 RPM (green cartridge)                                 */
-/*    - ratio6_1  = 600 RPM (blue cartridge)                                  */
-/*----------------------------------------------------------------------------*/
+// Drivetrain Motors - motor(port, gearRatio, reversed)
+motor LeftMotor1 = motor(PORT10, ratio18_1, true);
+motor LeftMotor2 = motor(PORT6, ratio18_1, true);
+motor LeftMotor3 = motor(PORT9, ratio18_1, true);
 
-// Left side motors - ALL REVERSED for correct drive direction
-motor LeftMotor1 = motor(PORT10, ratio18_1, true); //10
-motor LeftMotor2 = motor(PORT6, ratio18_1, true); //6
-motor LeftMotor3 = motor(PORT9, ratio18_1, true); //9
+motor RightMotor1 = motor(PORT1, ratio18_1, false);
+motor RightMotor2 = motor(PORT2, ratio18_1, false);
+motor RightMotor3 = motor(PORT3, ratio18_1, false);
 
-// Right side motors - NOT REVERSED
-motor RightMotor1 = motor(PORT1, ratio18_1, false); //1
-motor RightMotor2 = motor(PORT2, ratio18_1, false);//2
-motor RightMotor3 = motor(PORT3, ratio18_1, false);//3
-
-/*----------------------------------------------------------------------------*/
-/*                           SUBSYSTEM MOTORS                                 */
-/*----------------------------------------------------------------------------*/
-
-motor Intake = motor(PORT11, ratio6_1, true);      // 600 RPM, reversed
-motor BackRoller = motor(PORT20, ratio6_1, false); // 600 RPM
-motor TopRoller = motor(PORT16, false);            // Default cartridge
+// Subsystem Motors
+motor Intake = motor(PORT11, ratio6_1, true);
+motor BackRoller = motor(PORT20, ratio6_1, false);
+motor TopRoller = motor(PORT16, false);
 
 motor_group IntakeMotors = motor_group(Intake, BackRoller);
 
-/*----------------------------------------------------------------------------*/
-/*                             PNEUMATICS                                     */
-/*    Connected via 3-wire ports on the Brain                                 */
-/*----------------------------------------------------------------------------*/
-
+// Pneumatics
 digital_out Hood = digital_out(Brain.ThreeWirePort.A);
 digital_out Matchloader = digital_out(Brain.ThreeWirePort.B);
 digital_out Wings = digital_out(Brain.ThreeWirePort.C);
 digital_out Descore = digital_out(Brain.ThreeWirePort.D);
 
-/*----------------------------------------------------------------------------*/
-/*                              SENSORS                                       */
-/*----------------------------------------------------------------------------*/
-
-// Distance sensors
+// Sensors
 distance DistanceBack = distance(PORT18);
-distance DistanceFront = distance(PORT19); //19
+distance DistanceFront = distance(PORT19);
 distance DistanceSide = distance(PORT17);
 
-// Inertial sensor for heading (shared with chassis on PORT7)
-inertial Inertial = inertial(PORT7);//7
+inertial Inertial = inertial(PORT7);
 
-/*----------------------------------------------------------------------------*/
-/*                           INITIALIZATION                                   */
-/*----------------------------------------------------------------------------*/
-
+// Initialization
 void vexcodeInit(void) {
-  // Reserved for future initialization
 }

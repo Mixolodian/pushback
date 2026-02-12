@@ -1,25 +1,10 @@
-/*----------------------------------------------------------------------------*/
-/*                                                                            */
-/*    Module:       autons.cpp                                                */
-/*    Description:  Autonomous routines                                       */
-/*                                                                            */
-/*    CONTENTS:                                                               */
-/*    1. Toggle Functions                                                     */
-/*    2. Test Autonomous Routines                                             */
-/*    3. Competition Autonomous Routines                                      */
-/*                                                                            */
-/*----------------------------------------------------------------------------*/
+// autons.cpp - Autonomous routines
 
 #include "vex.h"
 #include "robot-config.h"
 #include "Autos/autonUtil.h"
 
-/*============================================================================*/
-/*                                                                            */
-/*                      SECTION 1: TOGGLE FUNCTIONS                           */
-/*                                                                            */
-/*============================================================================*/
-
+// Toggle Functions
 bool MidGoaling = false;
 bool longGoaling = false;
 
@@ -49,12 +34,7 @@ void HoodToggle() {
   Hood.set(true);
 }
 
-/*============================================================================*/
-/*                                                                            */
-/*                   SECTION 2: TEST AUTONOMOUS ROUTINES                      */
-/*                                                                            */
-/*============================================================================*/
-
+// Test Autonomous Routines
 void high_side_auto() {
   default_constants();
   IntakeMotors.setMaxTorque(100, pct);
@@ -157,24 +137,18 @@ void odom_test() {
 }
 
 void low_side_auto() {
-  /*--------------------------------------------------------------------------*/
-  /*                         PHASE 1: INITIALIZATION                          */
-  /*--------------------------------------------------------------------------*/
+  // Phase 1: Initialization
   default_constants();
   IntakeMotors.setMaxTorque(100, pct);
   chassis.set_coordinates(0, 0, 270);
 
-  /*--------------------------------------------------------------------------*/
-  /*                    PHASE 2: FIRST BALL COLLECTION                        */
-  /*--------------------------------------------------------------------------*/
+  // Phase 2: First ball collection
   IntakeMotors.spin(forward, 100, pct);
   chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);
   delayedCall(MatchToggle, 650);
   chassis.drive_to_point(-35, 5);
 
-  /*--------------------------------------------------------------------------*/
-  /*                      PHASE 3: FIRST SCORING ATTEMPT                      */
-  /*--------------------------------------------------------------------------*/
+  // Phase 3: First scoring attempt
   default_constants();
   Matchloader.set(false);
   chassis.turn_to_angle(215);
@@ -187,18 +161,14 @@ void low_side_auto() {
   IntakeMotors.spin(fwd, 100, pct);
   chassis.drive_distance(-6);
 
-  /*--------------------------------------------------------------------------*/
-  /*                    PHASE 4: SECOND TRIBALL COLLECTION                    */
-  /*--------------------------------------------------------------------------*/
+  // Phase 4: Second triball collection
   chassis.turn_to_point(-15, 28);
   chassis.drive_to_point(-15, 28);
   Matchloader.set(true);
   chassis.turn_to_angle(90);
   chassis.set_drive_constants(5.8, 3.5, 0, 17, 0);
 
-  /*--------------------------------------------------------------------------*/
-  /*                       PHASE 5: GOAL APPROACH & SCORE                     */
-  /*--------------------------------------------------------------------------*/
+  // Phase 5: Goal approach & score
   chassis.drive_distance(18);
   chassis.set_drive_constants(9, 3.5, 0, 17, 0);
   Hood.set(false);
@@ -208,9 +178,7 @@ void low_side_auto() {
   Matchloader.set(false);
   IntakeMotors.spin(fwd, 0, pct);
 
-  /*--------------------------------------------------------------------------*/
-  /*                      PHASE 6: REPOSITIONING/CLEANUP                      */
-  /*--------------------------------------------------------------------------*/
+  // Phase 6: Repositioning
   chassis.drive_distance(5);
   chassis.turn_to_angle(45);
   chassis.drive_distance(-5);
@@ -219,12 +187,7 @@ void low_side_auto() {
   chassis.turn_to_angle(90);
 }
 
-/*============================================================================*/
-/*                                                                            */
-/*                 SECTION 3: COMPETITION AUTONOMOUS ROUTINES                 */
-/*                                                                            */
-/*============================================================================*/
-
+// Competition Autonomous Routines
 void SKILLS() {
   chassis.set_coordinates(0, 0, 0);
   IntakeMotors.setMaxTorque(100, percent);
