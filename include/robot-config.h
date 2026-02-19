@@ -27,6 +27,7 @@ extern digital_out Hood;
 extern digital_out Matchloader;
 extern digital_out Wings;
 extern digital_out Descore;
+extern digital_out MidDescore;
 
 // Sensors
 extern distance DistanceBack;

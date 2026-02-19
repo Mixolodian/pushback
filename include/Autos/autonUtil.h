@@ -1,5 +1,5 @@
 #pragma once
-#include "JAR-Template/drive.h"
+#include "Drivetrain/drive.h"
 #include "robot-config.h"
 #include "vex.h"
 
@@ -12,9 +12,13 @@ void odom_constants();
 // Utility Functions
 void delayedCall(void (*func)(), int delayMs);
 
-// Drive to wall - maintains heading using inertial sensor
-// relative_to_robot: true = encoder-based inches, false = distance sensor mm
+// Drive to wall - drives until distance sensor reads target_distance (mm)
+// Maintains heading using inertial sensor
 void drive_to_wall(float target_distance, float drive_max_voltage,
-                   float heading_kp, float settle_error, float timeout,
-                   bool relative_to_robot);
+                   float heading_kp, float settle_error, float timeout);
 void drive_to_wall(float target_distance);
+
+// Toggle functions
+void toggleWings();
+void toggleDescore();
+void toggleMidDescore();

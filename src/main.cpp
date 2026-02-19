@@ -1,4 +1,4 @@
-// main.cpp - Competition template with JAR-Template chassis config
+// main.cpp - Competition template with Drivetrain chassis config
 
 #include "vex.h"
 #include "pid-tuning.h"
@@ -46,22 +46,11 @@ bool auto_started = false;
 // Pre-Autonomous
 int printDebugTask() {
   while (true) {
-    printf("\rX:%.2f Y:%.2f H:%.2f | DF:%.0f DB:%.0f DS:%.0f      "
-           "\n\rDL:%.0f/%.0f/%.0f DR:%.0f/%.0f/%.0f I:%.0f B:%.0f C      \033[A",
+    printf("\rX:%.2f Y:%.2f H:%.2f | DF:%.0f      ",
            chassis.get_X_position(),
            chassis.get_Y_position(),
            chassis.get_absolute_heading(),
-           DistanceFront.objectDistance(mm),
-           DistanceBack.objectDistance(mm),
-           DistanceSide.objectDistance(mm),
-           LeftMotor1.temperature(celsius),
-           LeftMotor2.temperature(celsius),
-           LeftMotor3.temperature(celsius),
-           RightMotor1.temperature(celsius),
-           RightMotor2.temperature(celsius),
-           RightMotor3.temperature(celsius),
-           Intake.temperature(celsius),
-           BackRoller.temperature(celsius));
+           DistanceFront.objectDistance(mm));
     fflush(stdout);
     task::sleep(100);
   }
@@ -120,7 +109,7 @@ void autonomous(void) {
       SKILLS();
       break;
     case 1:
-      high_side_auto();
+    Highside();
       break;
     case 2:
       low_side_auto();
@@ -166,10 +155,6 @@ void usercontrol(void) {
       intakePct = 100;
       hoodPct = 100;
       Hood.set(false);
-      Wings.set(true);
-    } else if (Controller1.ButtonB.pressing()) {
-      intakePct = 100;
-      hoodPct = 100;
       Wings.set(true);
     } else if (Controller1.ButtonL2.pressing()) {
       intakePct = 100;

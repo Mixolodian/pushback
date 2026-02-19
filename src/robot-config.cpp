@@ -35,6 +35,7 @@ digital_out Hood = digital_out(Brain.ThreeWirePort.A);
 digital_out Matchloader = digital_out(Brain.ThreeWirePort.B);
 digital_out Wings = digital_out(Brain.ThreeWirePort.C);
 digital_out Descore = digital_out(Brain.ThreeWirePort.D);
+digital_out MidDescore = digital_out(Brain.ThreeWirePort.E);
 
 // Sensors
 distance DistanceBack = distance(PORT18);

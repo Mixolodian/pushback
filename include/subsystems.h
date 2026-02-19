@@ -10,7 +10,5 @@ extern int GamePhase;
 /*----------------------------------------------------------------------------*/
 
 namespace subsystems {
-  void toggleWings();
-  void toggleDescore();
   void init();
 }

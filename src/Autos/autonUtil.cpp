@@ -48,20 +48,16 @@ void delayedCall(void (*func)(), int delayMs) {
   vex::task t(delayedCallTask, call);
 }
 
-// Drive to wall - maintains heading using inertial sensor
-// relative_to_robot=true: drive target_distance inches via encoders
-// relative_to_robot=false: drive until DistanceFront reads target_distance mm
+// Drive to wall - drives until distance sensor reads target_distance (mm)
+// Maintains heading using inertial sensor
 void drive_to_wall(float target_distance, float drive_max_voltage,
-                   float heading_kp, float settle_error, float timeout,
-                   bool relative_to_robot) {
+                   float heading_kp, float settle_error, float timeout) {
 
-  float drive_kp = relative_to_robot ? 4 : 0.05;
+  float drive_kp = 0.05;
   float drive_ki = 0.0;
-  float drive_kd = relative_to_robot ? 17.0 : 0.5;
+  float drive_kd = 0.5;
 
   float start_heading = Inertial.heading(degrees);
-  float start_left = chassis.get_left_position_in();
-  float start_right = chassis.get_right_position_in();
 
   float drive_error = target_distance;
   float drive_prev_error = target_distance;
@@ -74,15 +70,8 @@ void drive_to_wall(float target_distance, float drive_max_voltage,
   float settle_threshold = 20;
 
   while (time_spent < timeout) {
-    if (relative_to_robot) {
-      float left_traveled = chassis.get_left_position_in() - start_left;
-      float right_traveled = chassis.get_right_position_in() - start_right;
-      float avg_traveled = (left_traveled + right_traveled) / 2.0;
-      drive_error = target_distance - avg_traveled;
-    } else {
-      float current_distance = DistanceFront.objectDistance(mm);
-      drive_error = current_distance - target_distance;
-    }
+    float current_distance = DistanceFront.objectDistance(mm);
+    drive_error = current_distance - target_distance;
 
     drive_integral += drive_error;
     drive_derivative = drive_error - drive_prev_error;
@@ -128,7 +117,27 @@ void drive_to_wall(float target_distance, float drive_max_voltage,
   chassis.drive_with_voltage(0, 0);
 }
 
-// Simplified drive_to_wall (encoder mode with defaults)
+// Simplified drive_to_wall with defaults
 void drive_to_wall(float target_distance) {
-  drive_to_wall(target_distance, 6, 0.5, 1.0, 3000, true);
+  drive_to_wall(target_distance, 6, 0.5, 1.0, 3000);
+}
+
+// Toggle functions
+bool wingState = false;
+bool descoreState = false;
+bool MidDescoreState = false;
+
+void toggleWings() {
+  wingState = !wingState;
+  Matchloader.set(wingState);
+}
+
+void toggleDescore() {
+  descoreState = !descoreState;
+  Descore.set(descoreState);
+}
+
+void toggleMidDescore() {
+  MidDescoreState = !MidDescoreState;
+  MidDescore.set(MidDescoreState);
 }

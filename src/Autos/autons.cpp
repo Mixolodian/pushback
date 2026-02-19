@@ -92,7 +92,7 @@ void turn_test() {
   chassis.set_drive_constants(7, 3.5, 0, 19, 0);
   chassis.set_drive_exit_conditions(1.5, 100, 400);
   chassis.turn_to_angle(270);
-  drive_to_wall(220, 7, 1, 4, 900, false);
+  drive_to_wall(220, 7, 1, 4, 900);
   chassis.drive_distance(3);
   default_constants();
 
@@ -125,7 +125,7 @@ void turn_test() {
   chassis.drive_to_point(6, 53);
   chassis.turn_to_angle(270);
 
-  drive_to_wall(925, 12, 1, 4, 400, false);
+  drive_to_wall(925, 12, 1, 4, 400);
   Hood.set(true);
 }
 
@@ -232,12 +232,12 @@ void SKILLS() {
   chassis.turn_to_point(-53, 90);
   chassis.drive_to_point(-53, 90);
   chassis.turn_to_angle(270);
-  drive_to_wall(430, 7, 1, 1, 2000, false);
+  drive_to_wall(430, 7, 1, 1, 2000);
 
   // Scoring
   longGoaling = true;
   chassis.turn_to_angle(0);
-  drive_to_wall(925, 7, 1, 1, 2000, false);
+  drive_to_wall(925, 7, 1, 1, 2000);
   chassis.set_coordinates(-40, 76, 0);
   Hood.set(true);
   IntakeMotors.spin(fwd, 100, pct);
@@ -281,10 +281,10 @@ void SKILLS() {
   chassis.turn_to_point(67, 0);
   chassis.drive_to_point(67, 0);
   chassis.turn_to_angle(90);
-  drive_to_wall(430, 7, 1, 1, 2000, false);
+  drive_to_wall(430, 7, 1, 1, 2000);
   chassis.turn_to_angle(180);
   longGoaling = true;
-  drive_to_wall(923, 7, 1, 1, 600, false);
+  drive_to_wall(923, 7, 1, 1, 600);
   IntakeMotors.spin(fwd, 100, pct);
   wait(2, sec);
   Hood.set(false);
@@ -317,7 +317,7 @@ void full_test() {
   task GoalTask(GoalWrapper);
   chassis.set_coordinates(0, 0, 0);
   longGoaling = true;
-  drive_to_wall(445, 8, 1, 4, 1000, false);
+  drive_to_wall(445, 8, 1, 4, 1000);
   chassis.turn_to_angle(90);
-  drive_to_wall(925, 8, 1, 4, 1000, false);
+  drive_to_wall(925, 8, 1, 4, 1000);
 }
