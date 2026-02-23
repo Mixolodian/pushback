@@ -22,3 +22,4 @@ void drive_to_wall(float target_distance);
 void toggleWings();
 void toggleDescore();
 void toggleMidDescore();
+void toggleMid();

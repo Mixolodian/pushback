@@ -101,7 +101,7 @@ void drive_to_wall(float target_distance, float drive_max_voltage,
     float right_voltage = drive_output - heading_correction;
     chassis.drive_with_voltage(left_voltage, right_voltage);
 
-    if (fabs(drive_error) < 5) {
+    if (fabs(drive_error) < 6) {
       settle_time += 10;
       if (settle_time >= settle_threshold) {
         break;
@@ -119,7 +119,7 @@ void drive_to_wall(float target_distance, float drive_max_voltage,
 
 // Simplified drive_to_wall with defaults
 void drive_to_wall(float target_distance) {
-  drive_to_wall(target_distance, 6, 0.5, 1.0, 3000);
+  drive_to_wall(target_distance, 6, 0.5, 1.0, 2000);
 }
 
 // Toggle functions
@@ -139,5 +139,12 @@ void toggleDescore() {
 
 void toggleMidDescore() {
   MidDescoreState = !MidDescoreState;
+  if (MidDescoreState) {
+    Hood.set(false);
+  }
   MidDescore.set(MidDescoreState);
+}
+
+void toggleMid(){
+  Wings.set(true);
 }

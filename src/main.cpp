@@ -63,6 +63,7 @@ void pre_auton() {
 
   // Start debug print task (only instance of terminal output)
   task debugTask(printDebugTask);
+  drawTeamNumber();
   Inertial.calibrate();
 
   while (!auto_started) {
@@ -100,13 +101,13 @@ void pre_auton() {
 
 // Autonomous
 void autonomous(void) {
-  current_auton_selection = 1;  // Override for testing (remove in competition)
+  current_auton_selection = 0;  // Override for testing (remove in competition)
   auto_started = true;
   GamePhase = AUTO;
 
   switch (current_auton_selection) {
     case 0:
-      SKILLS();
+      Skills();
       break;
     case 1:
     Highside();
@@ -152,8 +153,8 @@ void usercontrol(void) {
       Hood.set(false);
       Wings.set(false);
     } else if (Controller1.ButtonL1.pressing()) {
-      intakePct = 100;
-      hoodPct = 100;
+      intakePct = 70;
+      hoodPct = 70;
       Hood.set(false);
       Wings.set(true);
     } else if (Controller1.ButtonL2.pressing()) {
@@ -162,6 +163,7 @@ void usercontrol(void) {
       Hood.set(true);
       Wings.set(false);
     }
+
 
     Intake.spin(fwd, intakePct, pct);
     BackRoller.spin(fwd, hoodPct, pct);
