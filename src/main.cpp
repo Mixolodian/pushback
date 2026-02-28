@@ -110,13 +110,13 @@ void autonomous(void) {
       Skills();
       break;
     case 1:
-    Highside();
+    high_side_auto();
       break;
     case 2:
-      low_side_auto();
+      Solo();
       break;
     case 3:
-      turn_test();
+      low_side_auto();
       break;
     case 4:
       full_test();
@@ -153,8 +153,8 @@ void usercontrol(void) {
       Hood.set(false);
       Wings.set(false);
     } else if (Controller1.ButtonL1.pressing()) {
-      intakePct = 70;
-      hoodPct = 70;
+      intakePct = 50;
+      hoodPct = 50;
       Hood.set(false);
       Wings.set(true);
     } else if (Controller1.ButtonL2.pressing()) {
@@ -162,6 +162,11 @@ void usercontrol(void) {
       hoodPct = 100;
       Hood.set(true);
       Wings.set(false);
+    } else if (Controller1.ButtonB.pressing()) {
+      intakePct = 100;
+      hoodPct = 100;
+      Hood.set(false);
+      Wings.set(true);
     }
 
 

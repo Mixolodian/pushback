@@ -38,9 +38,9 @@ digital_out Descore = digital_out(Brain.ThreeWirePort.D);
 digital_out MidDescore = digital_out(Brain.ThreeWirePort.E);
 
 // Sensors
-distance DistanceBack = distance(PORT18);
+distance DistanceBack = distance(PORT17);
 distance DistanceFront = distance(PORT13);
-distance DistanceSide = distance(PORT17);
+distance DistanceSide = distance(PORT18);
 
 inertial Inertial = inertial(PORT7);
 

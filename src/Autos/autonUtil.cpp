@@ -8,13 +8,13 @@
 // PID format: (maxVoltage, kP, kI, kD, startI)
 // Exit conditions format: (settle_error, settle_time, timeout)
 void default_constants() {
-  chassis.set_drive_constants(8, 3.2, 0, 20, 0);
+  chassis.set_drive_constants(8.5, 3.3, 0, 20, 0);
   chassis.set_heading_constants(8, .4, 0, 1, 0);
   chassis.set_turn_constants(8, .5, 0, 4, 15);
   chassis.set_swing_constants(6, .3, 0, 2, 15);
 
-  chassis.set_drive_exit_conditions(1.5, 250, 3900);
-  chassis.set_turn_exit_conditions(2, 200, 2000);
+  chassis.set_drive_exit_conditions(1, 250, 2500);
+  chassis.set_turn_exit_conditions(1.5, 150, 1100);
   chassis.set_swing_exit_conditions(3, 100, 3000);
 }
 
@@ -101,7 +101,7 @@ void drive_to_wall(float target_distance, float drive_max_voltage,
     float right_voltage = drive_output - heading_correction;
     chassis.drive_with_voltage(left_voltage, right_voltage);
 
-    if (fabs(drive_error) < 6) {
+    if (fabs(drive_error) < settle_error) {
       settle_time += 10;
       if (settle_time >= settle_threshold) {
         break;
@@ -119,7 +119,7 @@ void drive_to_wall(float target_distance, float drive_max_voltage,
 
 // Simplified drive_to_wall with defaults
 void drive_to_wall(float target_distance) {
-  drive_to_wall(target_distance, 6, 0.5, 1.0, 2000);
+  drive_to_wall(target_distance, 7.5, 0.8, 8.0, 2000);
 }
 
 // Toggle functions
@@ -147,4 +147,29 @@ void toggleMidDescore() {
 
 void toggleMid(){
   Wings.set(true);
+}
+
+// Snapshot and correct Y position using distance sensor drift compensation.
+// First call: records current odometry Y and front distance reading.
+// Second call: computes how far the robot actually moved (via distance sensor delta),
+// converts mm -> inches, and re-sets Y accordingly. Resets state after second call.
+static bool _snapTaken = false;
+static float _snapY    = 0;
+static float _snapDist = 0;
+
+void snapCorrectY() {
+  if (!_snapTaken) {
+    // --- Snapshot ---
+    _snapY    = chassis.get_Y_position();
+    _snapDist = DistanceFront.objectDistance(mm);
+    _snapTaken = true;
+  } else {
+    // --- Correct ---
+    float currentDist       = DistanceFront.objectDistance(mm);
+    // Positive when robot moved toward the wall (distance shrank)
+    float distDeltaInches   = (_snapDist - currentDist) / 25.4f;
+    float correctedY        = _snapY + distDeltaInches;
+    chassis.set_coordinates(chassis.get_X_position(), correctedY, Inertial.heading(degrees));
+    _snapTaken = false; // reset for next pair of calls
+  }
 }

@@ -23,3 +23,7 @@ void toggleWings();
 void toggleDescore();
 void toggleMidDescore();
 void toggleMid();
+
+// Y position drift correction using distance sensor.
+// Call once before a movement to snapshot, call again after to apply correction.
+void snapCorrectY();

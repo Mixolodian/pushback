@@ -11,5 +11,4 @@ int GamePhase = AUTO;
 void subsystems::init() {
   Controller1.ButtonRight.pressed(toggleWings);
   Controller1.ButtonY.pressed(toggleDescore);
-  Controller1.ButtonB.pressed(toggleMidDescore);
 }

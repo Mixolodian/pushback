@@ -43,7 +43,7 @@ void high_side_auto() {
   IntakeMotors.spin(forward, 100, pct);
   chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);
   delayedCall(MatchToggle, 650);
-  chassis.drive_to_point(-31, -5);
+  chassis.drive_to_point(-32, -5);
 
   default_constants();
   chassis.turn_to_angle(135);
@@ -53,7 +53,7 @@ void high_side_auto() {
   chassis.drive_distance(-5.3);
   default_constants();
   IntakeMotors.spin(fwd, 100, pct);
-  wait(0.8, sec);
+  wait(0.6, sec);
 
   chassis.turn_to_point(-15, -30);
   chassis.drive_to_point(-15, -30);
@@ -61,7 +61,7 @@ void high_side_auto() {
   Wings.set(false);
   chassis.turn_to_angle(90);
   chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);
-  chassis.set_drive_exit_conditions(1.5, 250, 1200);
+  chassis.set_drive_exit_conditions(1.5, 250, 1000);
 
   chassis.drive_distance(14);
   chassis.set_drive_constants(9, 3.5, 0, 17, 0);
