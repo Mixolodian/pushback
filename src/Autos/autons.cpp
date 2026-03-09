@@ -130,10 +130,59 @@ void turn_test() {
 }
 
 void odom_test() {
-  chassis.set_coordinates(0, 0, 0);
-  Intake.spin(fwd, 100, volt);
-  wait(5, sec);
-  chassis.drive_distance(5);
+  chassis.set_coordinates(0,0,0);
+  IntakeMotors.spin(fwd,100,pct);
+  Descore.set(true);
+
+  // --- LEFT MID GOAL ---
+  chassis.set_drive_constants(6, 3.2, 0, 20, 0); // slower constants for precision
+  IntakeMotors.spin(fwd,100,pct);
+  /*chassis.drive_distance(3);
+  chassis.turn_to_point(-10,15);
+  chassis.drive_to_point(-10,15);*/
+  chassis.drive_to_point(0,22);
+  chassis.turn_to_point(-16,22);
+  chassis.set_drive_constants(6, 3.5, 0, 20, 0); // reset to default constants
+  chassis.drive_to_point(-18,22);
+
+  default_constants();
+    chassis.turn_to_angle(230);
+
+  // Tight exit conditions to stop precisely at goal
+  chassis.set_drive_exit_conditions(0.5,200,1000);
+  chassis.set_turn_exit_conditions(1,150,1000);
+  chassis.drive_to_point(-10,30);
+  IntakeMotors.spin(fwd,0,pct);
+
+  // --- PUSH BALL INTO LEFT MID GOAL ---
+  chassis.set_turn_exit_conditions(1,200,1000);
+  chassis.turn_to_angle(230);
+  Wings.set(true);
+  default_constants();
+  IntakeMotors.spin(fwd,60,pct);
+
+  chassis.drive_distance(-1.5);
+  Wings.set(true);
+  wait(0.5,sec);
+  IntakeMotors.spin(fwd,100,pct);
+  wait(0.6,sec);
+  chassis.drive_distance(-0.5);
+  default_constants();
+
+  // --- ROUTE TO MATCHLOADER (bottom left) ---
+  chassis.drive_to_point(-39,0);
+  Wings.set(false);
+
+  // Align to matchloader wall and load first ball
+  Matchloader.set(true);
+  chassis.turn_to_point(-41,-12);
+  drive_to_wall(270);
+  IntakeMotors.spin(fwd,100,pct);
+  chassis.drive_distance(2,180,9,1,5,50,200); // short forward push into loader
+  wait(1.3,sec);
+
+  // --- ROUTE TO LEFT GOAL ---
+  chassis.drive_to_point(-54,10);
 }
 
 void low_side_auto() {
@@ -144,7 +193,6 @@ void low_side_auto() {
 
   // Phase 2: First ball collection
   IntakeMotors.spin(forward, 100, pct);
-  chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);
   delayedCall(MatchToggle, 650);
   chassis.drive_to_point(-35, 5);
 
@@ -152,7 +200,6 @@ void low_side_auto() {
   default_constants();
   Matchloader.set(false);
   chassis.turn_to_angle(215);
-  chassis.set_drive_constants(5.2, 3.5, 0, 17, 0);
 
   chassis.drive_distance(4);
   default_constants();
@@ -167,17 +214,20 @@ void low_side_auto() {
   Matchloader.set(true);
   chassis.turn_to_angle(90);
   chassis.set_drive_constants(5.8, 3.5, 0, 17, 0);
-
+  drive_to_wall(270, 7, 1, 4, 1000);
   // Phase 5: Goal approach & score
-  chassis.drive_distance(18);
-  chassis.set_drive_constants(9, 3.5, 0, 17, 0);
+  chassis.drive_distance(2,180,9,1,5,50,200); // short forward push into loader
+  wait(0.4,sec);
   Hood.set(false);
-  chassis.drive_to_point(-30, 31.5);
+  default_constants();
+  chassis.set_drive_exit_conditions(1.5, 250, 900);
+  chassis.drive_to_point(-30, 28);
   Hood.set(true);
-  wait(1.4, sec);
+  wait(1.5, sec);
   Matchloader.set(false);
+  chassis.turn_to_angle(90);
   IntakeMotors.spin(fwd, 0, pct);
-
+  
   // Phase 6: Repositioning
   chassis.drive_distance(5);
   chassis.turn_to_angle(45);

@@ -101,7 +101,7 @@ void pre_auton() {
 
 // Autonomous
 void autonomous(void) {
-  current_auton_selection = 0;  // Override for testing (remove in competition)
+  current_auton_selection = 1;  // Override for testing (remove in competition)
   auto_started = true;
   GamePhase = AUTO;
 
@@ -119,7 +119,7 @@ void autonomous(void) {
       low_side_auto();
       break;
     case 4:
-      full_test();
+      Highside();
       break;
   }
 }

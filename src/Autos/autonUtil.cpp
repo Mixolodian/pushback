@@ -119,7 +119,7 @@ void drive_to_wall(float target_distance, float drive_max_voltage,
 
 // Simplified drive_to_wall with defaults
 void drive_to_wall(float target_distance) {
-  drive_to_wall(target_distance, 7.5, 0.8, 8.0, 2000);
+  drive_to_wall(target_distance, 7.5, 0.8, 4.0, 2000);
 }
 
 // Toggle functions
